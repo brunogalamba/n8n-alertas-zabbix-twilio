@@ -47,7 +47,7 @@ Workflow para **notificação automática de incidentes de infraestrutura**, dis
 ## 🚀 Como usar
 
 ### 1. Importe o workflow
-No n8n, vá em **Workflows > Import** e selecione o arquivo `workflow.json`.
+No n8n, vá em **Workflows > Import** e selecione o arquivo `n8n-alertas-zabbix-twilio.json`.
 
 ### 2. Configure as credenciais
 

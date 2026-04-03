@@ -1,0 +1,202 @@
+{
+  "name": "Alertas A1 e Box",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "call",
+        "from": "+55{nr_origem}",
+        "to": "+55{nr_destino}",
+        "twiml": true,
+        "message": "=<Response>\n  <Say voice=\"Polly.Vitoria\" language=\"pt-BR\">\n    {{ $json.message }}\n  </Say>\n</Response>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        2416,
+        192
+      ],
+      "id": "a25ea7e6-2d75-460c-91d4-fb73d87f52fa",
+      "name": "Twilio",
+      "credentials": {
+        "twilioApi": {
+          "id": "fCp2tQuZd5JnUtb1",
+          "name": "Twilio account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "{WEBHOOK_PATH}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        1728,
+        272
+      ],
+      "id": "bb97ae59-1586-4a9f-809d-a9e4ba4ac535",
+      "name": "Zabbix Webhook",
+      "webhookId": "{WEBHOOK_PATH}"
+    },
+    {
+      "parameters": {
+        "content": "\nCALL IF THE SYSTEM FAILS",
+        "height": 340,
+        "width": 920,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1696,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "b4e6ba81-28f4-4a69-9369-3dcb917a6efb",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/{TWILIO_ACCOUNT_SID}/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "From",
+              "value": "whatsapp:+55{nr_origem}"
+            },
+            {
+              "name": "To",
+              "value": "whatsapp:+55{nr_destino}"
+            },
+            {
+              "name": "ContentSid",
+              "value": "{CONTENT_SID}"
+            },
+            {
+              "name": "ContentVariables",
+              "value": "={\n  \"1\":\"{{ $json.message }}\"\n}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2416,
+        352
+      ],
+      "id": "3fb2f6dc-fb7d-4e1e-89cd-19774cd05f35",
+      "name": "WHATSAPP",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "WvhCzsdJ2DxQaxeH",
+          "name": "ZOOM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "63516a6f-c957-4539-b06d-f11d0649c7e5",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2048,
+        272
+      ],
+      "id": "eeb7ea90-512c-4981-ac42-e6d2bbb932cd",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "### Testando workflow \ncurl -X POST https://<host>/webhook/{WEBHOOK_PATH} \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"message\": \"Servidor não responde — teste de alerta.\"}'",
+        "width": 368
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1696,
+        544
+      ],
+      "typeVersion": 1,
+      "id": "379c4839-3bf6-45fa-9638-50af195f326a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "📋 REQUISITOS DO WORKFLOW\n\nZABBIX\n- Configurar Media Type (webhook) com POST para a URL deste fluxo\n- Payload deve conter o campo: { \"message\": \"texto do alerta\" }\n- Associar a action/usuário desejado\n\nTWILIO — CREDENCIAIS\n- Acesse console.twilio.com e copie o Account SID e Auth Token\n- No n8n, crie duas credenciais:\n  → \"Twilio account\" (node de chamada): use Account SID + Auth Token\n  → \"Twilio HTTP Basic Auth\" (node WhatsApp): user = Account SID, senha = Auth Token\n\nTWILIO — VOZ\n- Número de origem deve ter o recurso de Voice habilitado\n- Substituir {nr_origem} e {nr_destino} pelos números reais (formato +55...)\n- Em contas trial, o número de destino precisa ser verificado no console\n\nTWILIO — WHATSAPP\n- Ativar o sandbox WhatsApp em console.twilio.com > Messaging > Try it out > WhatsApp\n- Criar ou localizar o template em Content > Content Template Builder\n- Copiar o Content SID (formato HXxxxx...) e substituir {CONTENT_SID} no node WHATSAPP\n- O template deve ter exatamente 1 variável {{1}} para receber o texto do alerta\n\nN8N\n- Substituir {TWILIO_ACCOUNT_SID} na URL do node WHATSAPP\n- Ativar o workflow somente após validar os itens acima",
+        "height": 608,
+        "width": 912
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1696,
+        -480
+      ],
+      "typeVersion": 1,
+      "id": "cf391d71-6497-4574-acd3-7f065aabb669",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Zabbix Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Twilio",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "WHATSAPP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "ElCIBgZb6nVdT90G",
+    "availableInMCP": false
+  },
+  "versionId": "9c04bb6f-b2c9-4beb-aff8-bf79c6a40a84",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "529d82de909272bba4984a87481f3f4c65a986c9705612375a30f6969eba6787"
+  },
+  "id": "pormB1dH7V9OZSfv",
+  "tags": []
+}

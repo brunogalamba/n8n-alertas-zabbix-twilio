@@ -88,7 +88,7 @@ Após validar o teste, ative o workflow pelo toggle no canto superior direito do
 ```
 n8n-alertas-zabbix-twilio/
 ├── README.md
-├── workflow.json
+├── n8n-alertas-zabbix-twilio.json
 └── assets/
     └── screenshot.png
 ```
@@ -97,7 +97,7 @@ n8n-alertas-zabbix-twilio/
 
 ## 🔐 Segurança
 
-O arquivo `workflow.json` foi sanitizado — nenhum dado sensível está exposto.  
+O arquivo `n8n-alertas-zabbix-twilio.json` foi sanitizado — nenhum dado sensível está exposto.  
 Todos os valores confidenciais foram substituídos por placeholders no formato `{PLACEHOLDER}`.
 
 ---

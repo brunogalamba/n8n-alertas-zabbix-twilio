@@ -1,5 +1,5 @@
 {
-  "name": "Alertas A1 e Box",
+  "name": "n8n-alertas-zabbix-twilio",
   "nodes": [
     {
       "parameters": {

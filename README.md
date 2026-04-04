@@ -66,8 +66,8 @@ Abra o workflow importado e substitua:
 |---|---|---|
 | `{TWILIO_ACCOUNT_SID}` | Node WHATSAPP → URL | Seu Account SID (`ACxxxx...`) |
 | `{CONTENT_SID}` | Node WHATSAPP → ContentSid | SID do template (`HXxxxx...`) |
-| `{nr_origem}` | Nodes Twilio e WHATSAPP | Número Twilio sem `+55` |
-| `{nr_destino}` | Nodes Twilio e WHATSAPP | Número de destino sem `+55` |
+| `{nr_origem}` | Nodes Twilio e WHATSAPP | Número Twilio com `+55` |
+| `{nr_destino}` | Nodes Twilio e WHATSAPP | Número de destino com `+55` |
 | `{ERROR_WORKFLOW_ID}` | Settings | ID do workflow de tratamento de erros (opcional) |
 
 ### 4. Teste o webhook
